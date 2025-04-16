@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM FKM UNSRAT - Badan Perwakilan Mahasiswa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        army: {
+                            light: '#5D6E1E',
+                            DEFAULT: '#4B5320',
+                            dark: '#3A4119'
+                        },
+                        silversand: {
+                            light: '#E0E2E1',
+                            DEFAULT: '#BDC1BF',
+                            dark: '#A5A9A7'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Montserrat', 'sans-serif'],
+                        'display': ['Orbitron', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700&display=swap');
+
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Montserrat', sans-serif; background-color: #f8f9fa; color: #343a40; }
+        .clip-path-hero { clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%); }
+        #home { background-image: url('./1.png'); background-size: cover; background-position: center; background-repeat: no-repeat; }
+        #home[style*="background-image: none"] { background-color: #3A4119; }
+
+        /* --- Structure Section Styling (Asli) --- */
+        .commission-container { position: relative; }
+        #commissionSliderWrapper { overflow: hidden; position: relative; width: 100%; }
+        #commissionSlider { display: flex; width: 100%; }
+        .commission-slide { min-width: 100%; width: 100%; flex-shrink: 0; box-sizing: border-box; opacity: 0; transform: translateX(50px); display: flex; flex-direction: column; align-items: center; gap: 1.5rem; padding: 0; transition: opacity 0.5s ease, transform 0.5s ease; }
+        .visible-slide { opacity: 1; transform: translateX(0); }
+        .chairman-block { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.5rem; }
+        .chairman-block img { width: 10rem; height: 12.5rem; border-radius: 80px; object-fit: cover; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .chairman-block .name { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; color: #3A4119; margin-top: 0.75rem; }
+        .chairman-block .title { font-size: 0.875rem; line-height: 1.25rem; color: #666; text-transform: uppercase; letter-spacing: 0.05em; }
+        .mobile-vertical { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; align-items: start; width: 100%; margin-bottom: 1.5rem; }
+        .member-card { display: flex; flex-direction: column; align-items: center; }
+        .member-card img { width: 8rem; height: 10rem; border-radius: 60px; object-fit: cover; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .member-card .name { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: #3A4119; margin-top: 0.5rem; }
+        .member-card .title { font-size: 0.75rem; line-height: 1rem; color: #777; text-transform: uppercase; letter-spacing: 0.05em; }
+        /* --- End Structure Section Styling --- */
+
+        .section-title { position: relative; display: inline-block; color: #3A4119; }
+        .section-title::after { content: ''; position: absolute; bottom: -10px; left: 0; width: 60%; height: 4px; background: linear-gradient(90deg, #4B5320 0%, #BDC1BF 100%); border-radius: 2px; }
+
+        /* Styling Galeri */
+        .gallery-item { overflow: hidden; position: relative; cursor: pointer; border-radius: 0.75rem; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .gallery-item:hover { transform: translateY(-6px) scale(1.02); box-shadow: 0 10px 25px rgba(75, 83, 32, 0.2); }
+        .gallery-item img { transition: transform 0.5s ease; width: 100%; height: 100%; object-fit: cover; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-overlay { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(58, 65, 25, 0.95) 10%, rgba(58, 65, 25, 0.7) 50%, transparent); padding: 1.5rem 1.25rem; opacity: 0; transform: translateY(20px); transition: opacity 0.4s ease, transform 0.4s ease; border-bottom-left-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
+        .gallery-item:hover .gallery-overlay { opacity: 1; transform: translateY(0); }
+        /* End Styling Galeri */
+
+        /* Navbar Styling */
+        .nav-link { position: relative; transition: all 0.3s ease; color: #4A5568; }
+        .nav-link:hover { color: #3A4119; }
+        .nav-link::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background-color: #4B5320; transition: width 0.3s ease; }
+        .nav-link:hover::after, .nav-link.active::after { width: 100%; }
+        .nav-link.active { color: #3A4119; font-weight: 600; }
+        .hexagon { display: flex; align-items: center; justify-content: center; background-color: #4B5320; color: white; width: 40px; height: 40px; border-radius: 8px; }
+        /* End Navbar Styling */
+
+        /* Styling Kartu Fungsi */
+        .function-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); overflow: visible; background-color: white; border: 1px solid #E0E2E1; border-radius: 0.75rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .function-card:hover { transform: translateY(-10px); box-shadow: 0 12px 20px rgba(75, 83, 32, 0.15); border-color: #A5A9A7; }
+        .function-card .hexagon { margin-bottom: 1rem; transition: transform 0.3s ease; }
+        .function-card:hover .hexagon { transform: scale(1.1) rotate(-10deg); }
+        .function-card h3 { color: #3A4119; transition: color 0.3s ease; }
+        .function-card:hover h3 { color: #4B5320; }
+        .function-card p { color: #6c757d; }
+        /* End Styling Kartu Fungsi */
+
+        /* Styling Tombol Umum */
+        .btn { display: inline-block; padding: 0.8rem 1.8rem; border-radius: 0.5rem; font-weight: 600; text-align: center; transition: all 0.3s ease; cursor: pointer; border: none; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
+        .btn-army { background-color: #4B5320; color: white; }
+        .btn-army:hover { background-color: #3A4119; box-shadow: 0 5px 12px rgba(75, 83, 32, 0.25); transform: translateY(-2px); }
+        .btn-silversand { background-color: #BDC1BF; color: #3A4119; }
+        .btn-silversand:hover { background-color: #A5A9A7; box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18); transform: translateY(-2px); }
+        .btn-outline-silversand { background-color: transparent; color: #BDC1BF; border: 2px solid #BDC1BF; }
+        .btn-outline-silversand:hover { background-color: rgba(189, 193, 191, 0.1); color: white; border-color: white; transform: translateY(-2px); box-shadow: 0 5px 12px rgba(255, 255, 255, 0.1); }
+        /* End Styling Tombol Umum */
+
+        .scroll-indicator { animation: bounce 2s infinite; color: #BDC1BF; }
+        @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-15px); } 60% { transform: translateY(-7px); } }
+
+        /* Modal Galeri */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal-content { max-width: 85%; max-height: 85%; object-fit: contain; }
+        .modal-close { position: absolute; top: 15px; right: 25px; color: white; font-size: 40px; cursor: pointer; font-weight: bold; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
+        /* End Modal Galeri */
+
+        /* Tombol Navigasi Slider Struktur */
+        .nav-btn-container { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; display: flex; justify-content: space-between; padding: 0 1rem; z-index: 20; pointer-events: none; }
+        .nav-btn { pointer-events: auto; background-color: rgba(75, 83, 32, 0.8); color: white; padding: 0.75rem; line-height: 0; border-radius: 9999px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: background-color 0.3s ease, transform 0.3s ease; }
+        .nav-btn:hover { background-color: #3A4119; transform: scale(1.1); }
+
+        /* Dots Indikator Slider Struktur */
+        .mobile-dots-indicator { display: none; text-align: center; margin-top: 1.5rem; padding-bottom: 1rem; }
+        .dot { display: inline-block; width: 10px; height: 10px; background-color: #BDC1BF; border-radius: 50%; margin: 0 5px; transition: background-color 0.3s ease, transform 0.3s ease; cursor: pointer; }
+        .dot.active { background-color: #4B5320; transform: scale(1.2); }
+
+        /* --- Responsif (Mobile Overrides) --- */
+        @media (max-width: 1024px) { /* lg breakpoint for about section */
+             #about-grid { grid-template-columns: 1fr; } /* About jadi 1 kolom di tablet */
+             #about-functions-panel { margin-top: 2.5rem; } /* Beri jarak atas saat stack */
+        }
+        @media (max-width: 768px) { /* md breakpoint */
+             .mobile-vertical { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+             #contact-grid { grid-template-columns: 1fr; }
+             #contact-info { text-align: center; margin-bottom: 2rem;}
+             #contact-map { height: 350px; }
+        }
+        @media (max-width: 640px) { /* sm breakpoint */
+            .commission-container { padding: 1rem 0; }
+            .commission-slide { padding: 0 1rem; opacity: 1; transform: none; transition: none; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+            #commissionSliderWrapper { cursor: grab; }
+            #commissionSliderWrapper:active { cursor: grabbing; }
+
+            .chairman-block { margin-bottom: 1rem; }
+            .chairman-block img { width: 7rem; height: 8.75rem; border-radius: 60px; } /* Radius asli mobile */
+            .chairman-block .name { font-size: 1rem; }
+            .chairman-block .title { font-size: 0.75rem; }
+
+            .mobile-vertical { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; width: 100%; margin-bottom: 1rem; }
+            .member-card { width: auto; max-width: 200px; }
+            .member-card img { width: 6rem; height: 7.5rem; border-radius: 50px; } /* Radius asli mobile */
+            .member-card .name { font-size: 0.875rem; line-height: 1.1rem; }
+            .member-card .title { font-size: 0.7rem; }
+
+            .nav-btn-container { display: none; }
+            .mobile-dots-indicator { display: block; }
+            .commission-task-description { font-size: 0.8rem; }
+
+            /* Penyesuaian ukuran font judul section */
+            .section-title { font-size: 1.75rem; }
+            #functions h3 { font-size: 1.1rem; }
+            #functions .text-2xl { font-size: 1.5rem; }
+            #gallery h3 { font-size: 1rem; }
+            #contact h2.section-title { font-size: 1.75rem; }
+            .btn { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
+            #contact-map { height: 300px; }
+            #about-functions-panel h3 { font-size: 1.5rem; } /* Judul panel fungsi di mobile */
+        }
+
+        /* --- SVG Pattern Styling (Dihapus karena SVG dihilangkan) --- */
+        /* .svg-pattern-container { ... } */
+        /* .svg-pattern { ... } */
+
+        /* Styling untuk Panel Fungsi di About Section */
+        #about-functions-panel {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1), 0 5px 10px rgba(0,0,0,0.05);
+            border: 1px solid #E0E2E1; /* silversand-light */
+            overflow: hidden; /* Agar border-radius bekerja */
+        }
+        #about-functions-panel .panel-header {
+            background: linear-gradient(to right, #4B5320, #5D6E1E); /* Gradient army */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #3A4119; /* army-dark */
+        }
+        #about-functions-panel .panel-content {
+            padding: 1.5rem;
+        }
+        #about-functions-panel ul li i {
+            transition: transform 0.3s ease;
+        }
+         #about-functions-panel ul li:hover i {
+            transform: scale(1.2); /* Efek hover ikon */
+        }
+        /* End Styling Panel Fungsi */
+
+    </style>
+</head>
+<body class="bg-silversand-light">
+
+    <nav class="fixed w-full bg-white/95 backdrop-blur-sm z-50 transition-all duration-300 shadow-sm" id="navbar">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#home" class="flex items-center space-x-2 group">
+                <div class="hexagon group-hover:scale-110 transition-transform duration-300">
+                    <i class="fas fa-university text-lg"></i>
+                </div>
+                <span class="text-xl font-display font-semibold text-army group-hover:text-army-dark transition-colors">BPM FKM</span>
+            </a>
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="nav-link active">Beranda</a>
+                <a href="#about" class="nav-link">Tentang</a>
+                <a href="#structure" class="nav-link">Struktur</a>
+                <a href="#functions" class="nav-link">Fungsi</a>
+                <a href="#gallery" class="nav-link">Galeri</a>
+                <a href="#contact" class="nav-link">Kontak</a>
+            </div>
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-army focus:outline-none p-2 -mr-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-4 px-4 absolute w-full shadow-lg border-t border-gray-200">
+            <a href="#home" class="block py-2 text-army font-semibold">Beranda</a>
+            <a href="#about" class="block py-2 text-gray-700 hover:text-army font-medium">Tentang</a>
+            <a href="#structure" class="block py-2 text-gray-700 hover:text-army font-medium">Struktur</a>
+            <a href="#functions" class="block py-2 text-gray-700 hover:text-army font-medium">Fungsi</a>
+            <a href="#gallery" class="block py-2 text-gray-700 hover:text-army font-medium">Galeri</a>
+            <a href="#contact" class="block py-2 text-gray-700 hover:text-army font-medium">Kontak</a>
+        </div>
+    </nav>
+    <section id="home"
+             class="relative h-screen flex items-center clip-path-hero overflow-hidden"
+             onerror="this.style.backgroundImage='none'; console.warn('Hero background image failed to load.');">
+        <div class="absolute inset-0 bg-gradient-to-br from-army-dark/75 to-army/60 z-[1]"></div>
+        <div class="container mx-auto px-4 relative z-[3]">
+            <div class="max-w-3xl text-left">
+                <h1 class="hero-text-item text-5xl md:text-7xl font-display font-bold text-white mb-3 leading-tight drop-shadow-lg">
+                    Badan Perwakilan Mahasiswa
+                </h1>
+                <hr class="hero-text-item border-t-2 border-silversand-light w-24 my-4 opacity-80">
+                <p class="hero-text-item text-xl md:text-2xl font-sans font-semibold text-silversand-light mb-1 drop-shadow-md">
+                    Fakultas Kesehatan Masyarakat
+                </p>
+                <p class="hero-text-item text-lg md:text-xl font-sans text-silversand-light mb-6 drop-shadow-md">
+                    Universitas Sam Ratulangi
+                </p>
+                <p class="hero-text-item text-base md:text-lg text-white mb-5 max-w-xl leading-relaxed drop-shadow-sm">
+                </p>
+                <div class="hero-text-item flex flex-col sm:flex-row gap-4">
+                    <a href="#about" class="btn btn-silversand">
+                        Pelajari Lebih Lanjut
+                    </a>
+                    <a href="#contact" class="btn btn-outline-silversand">
+                        Hubungi Kami
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white scroll-indicator z-[3]">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+            </svg>
+        </div>
+    </section>
+    <section id="about" class="py-20 bg-white relative overflow-hidden">
+        <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-army/5 rounded-full opacity-50 blur-2xl"></div>
+        <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-48 h-48 bg-silversand/10 rounded-full opacity-60 blur-xl"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+             <div id="about-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start"> <div class="lg:col-span-1"> <h2 class="section-title text-3xl md:text-4xl font-display font-bold mb-10">Tentang BPM FKM UNSRAT</h2>
+                    <div class="p-6 bg-gradient-to-br from-army/5 to-transparent rounded-lg border-l-4 border-army shadow-sm">
+                        <h3 class="text-xl font-bold text-army-dark mb-3">Lembaga Legislatif Mahasiswa</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Badan Perwakilan Mahasiswa Fakultas Kesehatan Masyarakat Universitas Sam Ratulangi Manado (BPM FKM UNSRAT) merupakan Lembaga Legislatif Mahasiswa di FKM UNSRAT. Sesuai AD/ART ORMAWA FKM UNSRAT, BPM berkedudukan sebagai organisasi perwakilan seluruh mahasiswa FKM UNSRAT, lembaga tertinggi dalam tugas fungsional organisasi kemahasiswaan, dan pemegang kedaulatan mahasiswa FKM UNSRAT.
+                        </p>
+                    </div>
+                    </div>
+
+                <div id="about-functions-panel" class="lg:col-span-1"> <div class="sticky top-24"> <div class="panel-header rounded-t-lg">
+                             <h3 class="text-xl md:text-2xl font-semibold text-white">Wewenang dan Fungsi Rinci BPM</h3>
+                        </div>
+                        <div class="panel-content">
+                            <ul class="list-none space-y-4 text-gray-700 leading-relaxed text-sm"> <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Membuat, mengeluarkan, dan mensosialisasikan kebijakan serta ketetapan yang diperlukan untuk kepentingan ORMAWA FKM UNSRAT di luar AD/ART.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Melakukan Amandemen terhadap AD/ART ORMAWA FKM UNSRAT.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Meminta laporan pertanggungjawaban Ketua dan Wakil Ketua BEM FKM UNSRAT pada akhir masa jabatannya.</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Memberhentikan Ketua dan Wakil Ketua BEM FKM UNSRAT jika terbukti melanggar AD/ART melalui Sidang Istimewa BPM.</span>
+                                </li>
+                                 <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Menggunakan hak interpelasi, hak angket, dan hak budgeting dalam melaksanakan tugas.</span>
+                                </li>
+                                 <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Menerima dan menetapkan aturan atau kebijakan usulan BEM, BKM, dan UKM FKM UNSRAT melalui Sidang Pleno.</span>
+                                </li>
+                                 <li class="flex items-start">
+                                    <i class="fas fa-check-circle text-army mt-1 mr-3 flex-shrink-0"></i>
+                                    <span>Memfasilitasi dan menyelesaikan sengketa antar ORMAWA FKM UNSRAT.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="structure" class="py-20 bg-silversand-light relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-display font-bold mb-4 inline-block">Struktur & Tugas Komisi</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Struktur organisasi BPM FKM UNSRAT periode 2023-2028 beserta tugas pokok masing-masing komisi.</p>
+            </div>
+    
+            <div class="bg-white rounded-xl shadow-lg p-4 sm:p-8 mb-8 relative commission-container">
+                <div class="relative">
+                    <div id="commissionSliderWrapper">
+                        <div id="commissionSlider">
+                            <div class="commission-slide">
+                                <div class="chairman-block">                                    <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=LR" alt="Ketua Komisi I"
+                                         class="w-40 h-50 rounded-full object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Livie Rondonuwu</p>
+                                    <p class="title mt-1">Ketua Komisi I</p>
+                                    <p class="tagline">"Aspirasi & Legislasi"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                         <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=IM" alt="Anggota 1 Komisi I"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md" onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Injilio Mondigir</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=TL" alt="Anggota 2 Komisi I"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Tania Lampa</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=MST" alt="Anggota 3 Komisi I"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Mawar Sharon Tondatuon</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                    <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi I:</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Bertugas dan bertanggung jawab dalam mengawasi, menilai, dan mengevaluasi kinerja lembaga eksekutif (BEM) serta Organisasi Mahasiswa (Ormawa) yang ada di FKM UNSRAT sesuai dengan statuta serta aturan hukum yang berlaku.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="commission-slide">
+                                <div class="chairman-block">
+                                     <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=MT" alt="Ketua Komisi II"
+                                          class="w-40 h-50 rounded-full object-cover shadow-md"
+                                          onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Melania Teko</p>
+                                    <p class="title mt-1">Ketua Komisi II</p>
+                                    <p class="tagline">"Pengawasan & Evaluasi"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=RVK" alt="Anggota 1 Komisi II"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Rahel Violentina Kambey</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=VT" alt="Anggota 2 Komisi II"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Visca Tompira</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=JS" alt="Anggota 3 Komisi II"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Jeheskiel Sanger</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                    <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi II (Hukum):</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Bertugas dan memiliki fungsi dalam pembentukan hukum (Undang-undang/Peraturan) yang berlaku di lembaga/organisasi mahasiswa di FKM UNSRAT.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="commission-slide">
+                                 <div class="chairman-block">
+                                    <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=YM" alt="Ketua Komisi III"
+                                         class="w-40 h-50 rounded-full object-cover shadow-md"
+                                         onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Yefta Mondigir</p>
+                                    <p class="title mt-1">Ketua Komisi III</p>
+                                     <p class="tagline">"Kelembagaan & Kemahasiswaan"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=FT" alt="Anggota 1 Komisi III"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Frinenda Tumbel</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=FS" alt="Anggota 2 Komisi III"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Fachri sumaila</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=TM" alt="Anggota 3 Komisi III"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Triana Madil</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                    <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi III (Hub. Lembaga & Aspirasi):</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Bertugas dan bertanggung jawab dalam koordinasi antar lembaga kemahasiswaan (BEM, BKM, UKM) dan mahasiswa, memediasi kepentingan program kerja, serta menyalurkan, menyaring, mengkaji, dan menjadi mediator/konsultan aspirasi mahasiswa.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="commission-slide">
+                                 <div class="chairman-block">                                    <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=GM" alt="Ketua Komisi IV"
+                                         class="w-40 h-50 rounded-full object-cover shadow-md"
+                                         onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Greyti Mait</p>
+                                    <p class="title mt-1">Ketua Komisi IV</p>
+                                     <p class="tagline">"Informasi & Dokumentasi"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=DB" alt="Anggota 1 Komisi IV"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Daniella Boediman</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=SA" alt="Anggota 2 Komisi IV"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Sepriadi Ambeang</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=NPA" alt="Anggota 3 Komisi IV"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Nayla Putri Alam</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                    <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi IV (Pembinaan & Suksesi):</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Bertanggung jawab dalam perekrutan KPUM dan KPPUM, menjalankan pemilihan umum mahasiswa FKM UNSRAT (pemilihan Ketua & Wakil Ketua BEM) berkoordinasi dengan Komisi Hukum.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="commission-slide">
+                                 <div class="chairman-block">
+                                    <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=MS" alt="Ketua Komisi V"
+                                         class="w-40 h-50 rounded-full object-cover shadow-md"
+                                         onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Marshanda Sugeha</p>
+                                    <p class="title mt-1">Ketua Komisi V</p>
+                                     <p class="tagline">"Informasi & Dokumentasi"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=MH" alt="Anggota 1 Komisi V"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Maghfira Hamid</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=CG" alt="Anggota 2 Komisi V"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Christi Gara</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=OAM" alt="Anggota 3 Komisi V"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Olivia Angelina Mandei</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                    <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi V (Publikasi & Dokumentasi):</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Bertugas dan bertanggung jawab mengelola penyebaran informasi internal/eksternal BPM (teks, gambar, video digital) dan mengelola sosial media BPM FKM UNSRAT.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="commission-slide">
+                                 <div class="chairman-block">
+                                    <img src="https://placehold.co/160x200/4B5320/FFFFFF?text=ST" alt="Ketua Komisi VI"
+                                         class="w-40 h-50 rounded-full object-cover shadow-md"
+                                         onerror="this.onerror=null;this.src='https://placehold.co/160x200/BDC1BF/4B5320?text=Err';">
+                                    <p class="name mt-3">Steffan Tabalujan</p>
+                                    <p class="title mt-1">Ketua Komisi VI</p>
+                                     <p class="tagline">"Informasi & Dokumentasi"</p>
+                                </div>
+                                <div class="mobile-vertical">
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=JS" alt="Anggota 1 Komisi VI"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Juverdi Sigarlaki</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=VK" alt="Anggota 2 Komisi VI"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Valensia Kailola</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                    <div class="member-card">
+                                        <img src="https://placehold.co/128x160/BDC1BF/4B5320?text=GL" alt="Anggota 3 Komisi VI"
+                                             class="w-32 h-40 rounded-full object-cover shadow-md"
+                                             onerror="this.onerror=null;this.src='https://placehold.co/128x160/cccccc/FFFFFF?text=Err';">
+                                        <p class="name mt-2 leading-tight">Gracia Ludjiwadu</p>
+                                        <p class="title mt-1">Anggota</p>
+                                    </div>
+                                </div>
+                                <div class="w-full max-w-2xl mt-4 px-2">
+                                     <h4 class="text-md font-semibold text-army-dark mb-2 text-center">Tugas Komisi VI (Adm & Logistik):</h4>
+                                    <p class="text-sm text-gray-600 text-center leading-relaxed commission-task-description">
+                                        Membantu pendataan tiap komisi; mendata aset organisasi; mengawasi pemeliharaan & penggunaan inventaris; mengusulkan pengadaan barang (pin, papan nama, PDH); mengelola & mendistribusikan perlengkapan organisasi.
+                                    </p>
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                    <div class="nav-btn-container">
+                        <button id="prevCommissionBtn" class="nav-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+                        <button id="nextCommissionBtn" class="nav-btn">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
+                    <div class="mobile-dots-indicator" id="dotsIndicator"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="functions" class="py-20 bg-white relative overflow-hidden">
+         <div class="absolute top-1/4 left-0 -ml-24 w-48 h-48 bg-silversand/10 rounded-full opacity-60 blur-xl z-0"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-display font-bold mb-4 inline-block">Fungsi Organisasi</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">BPM FKM UNSRAT memiliki berbagai fungsi strategis dalam menjalankan perannya sebagai lembaga legislatif mahasiswa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"> <div class="function-card p-6 text-center"> <div class="hexagon w-16 h-16 mb-4 inline-flex items-center justify-center"> <i class="fas fa-gavel text-2xl"></i> </div> <h3 class="text-xl font-bold text-army mb-2">Legislasi</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Membentuk peraturan & kebijakan untuk ORMAWA FKM UNSRAT.</p>
+                </div>
+                 <div class="function-card p-6 text-center">
+                    <div class="hexagon w-16 h-16 mb-4 inline-flex items-center justify-center"> <i class="fas fa-eye text-2xl"></i> </div>
+                    <h3 class="text-xl font-bold text-army mb-2">Pengawasan</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Mengawasi kinerja BEM dan ORMAWA lainnya.</p>
+                </div>
+                 <div class="function-card p-6 text-center">
+                    <div class="hexagon w-16 h-16 mb-4 inline-flex items-center justify-center"> <i class="fas fa-bullhorn text-2xl"></i> </div>
+                    <h3 class="text-xl font-bold text-army mb-2">Aspirasi</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Menyalurkan & mengelola aspirasi mahasiswa FKM UNSRAT.</p>
+                </div>
+                 <div class="function-card p-6 text-center">
+                    <div class="hexagon w-16 h-16 mb-4 inline-flex items-center justify-center"> <i class="fas fa-coins text-2xl"></i> </div>
+                    <h3 class="text-xl font-bold text-army mb-2">Anggaran</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">Memiliki hak budgeting terkait dana kemahasiswaan.</p>
+                </div>
+            </div>
+            </div>
+    </section>
+    <section id="gallery" class="py-20 bg-silversand-light relative overflow-hidden">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-display font-bold mb-4 inline-block">Galeri Kegiatan</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Dokumentasi berbagai kegiatan dan acara yang diselenggarakan oleh BPM FKM UNSRAT.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/4B5320/FFFFFF?text=Kegiatan+1" alt="Kegiatan 1" onerror="this.onerror=null;this.src='https://placehold.co/600x400/BDC1BF/4B5320?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Pelatihan Kepemimpinan 2023</h3>
+                        <p class="text-sm text-gray-200">Pelatihan intensif untuk pemimpin muda.</p>
+                    </div>
+                </div>
+                <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/BDC1BF/3A4119?text=Kegiatan+2" alt="Kegiatan 2" onerror="this.onerror=null;this.src='https://placehold.co/600x400/A5A9A7/FFFFFF?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Seminar Inovasi Sosial</h3>
+                        <p class="text-sm text-gray-200">Diskusi solusi berbasis teknologi.</p>
+                    </div>
+                </div>
+                <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/3A4119/E0E2E1?text=Kegiatan+3" alt="Kegiatan 3" onerror="this.onerror=null;this.src='https://placehold.co/600x400/4B5320/FFFFFF?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Rapat Koordinasi Ormawa</h3>
+                        <p class="text-sm text-gray-200">Sinergi antar lembaga kemahasiswaan.</p>
+                    </div>
+                </div>
+                 <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/5D6E1E/FFFFFF?text=Kegiatan+4" alt="Kegiatan 4" onerror="this.onerror=null;this.src='https://placehold.co/600x400/BDC1BF/4B5320?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Penyaluran Aspirasi</h3>
+                        <p class="text-sm text-gray-200">Mendengarkan suara mahasiswa.</p>
+                    </div>
+                </div>
+                 <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/4B5320/FFFFFF?text=Kegiatan+5" alt="Kegiatan 5" onerror="this.onerror=null;this.src='https://placehold.co/600x400/BDC1BF/4B5320?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Sidang Pleno BPM</h3>
+                        <p class="text-sm text-gray-200">Pembahasan program kerja.</p>
+                    </div>
+                </div>
+                 <div class="gallery-item aspect-video">
+                    <img src="https://placehold.co/600x400/BDC1BF/3A4119?text=Kegiatan+6" alt="Kegiatan 6" onerror="this.onerror=null;this.src='https://placehold.co/600x400/A5A9A7/FFFFFF?text=Gagal+Muat';">
+                    <div class="gallery-overlay">
+                        <h3 class="text-lg font-bold text-white">Kunjungan Studi Banding</h3>
+                        <p class="text-sm text-gray-200">Bertukar wawasan antar universitas.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="contact" class="py-20 bg-white relative overflow-hidden">
+        <div class="absolute bottom-0 right-0 -mb-20 -mr-20 w-72 h-72 bg-army/5 rounded-full opacity-50 blur-2xl z-0"></div>
+
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="section-title text-3xl md:text-4xl font-display font-bold mb-4 inline-block">Hubungi Kami</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">Temukan lokasi kami atau kirimkan pesan melalui email.</p> </div>
+
+            <div id="contact-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start"> <div id="contact-info" class="md:text-left text-center">
+                    <h3 class="text-2xl font-semibold text-army-dark mb-6">Informasi Kontak</h3>
+                    <div class="space-y-5"> <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3">
+                            <i class="fas fa-map-marker-alt text-army text-3xl flex-shrink-0"></i>
+                            <p class="text-gray-700 leading-relaxed">
+                                Kampus FKM UNSRAT, Jl. Kampus Unsrat, Bahu,<br class="hidden sm:block">
+                                Kec. Malalayang, Kota Manado, Sulawesi Utara
+                            </p>
+                        </div>
+                        <div class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-3">
+                            <i class="fas fa-envelope text-army text-3xl flex-shrink-0"></i>
+                            <a href="mailto:bpmfkm@unsrat.ac.id" class="text-gray-700 hover:text-army-dark transition-colors break-all"> bpmfkm@unsrat.ac.id
+                            </a>
+                        </div>
+                        </div>
+
+                    <div class="mt-8 pt-6 border-t border-silversand-dark/50">
+                         <div class="flex justify-center md:justify-start space-x-5">
+                            <a href="#" aria-label="Facebook" class="text-army hover:text-army-dark transition-colors"><i class="fab fa-facebook-f text-2xl"></i></a>
+                            <a href="#" aria-label="Twitter" class="text-army hover:text-army-dark transition-colors"><i class="fab fa-twitter text-2xl"></i></a>
+                            <a href="#" aria-label="Instagram" class="text-army hover:text-army-dark transition-colors"><i class="fab fa-instagram text-2xl"></i></a>
+                            <a href="#" aria-label="LinkedIn" class="text-army hover:text-army-dark transition-colors"><i class="fab fa-linkedin-in text-2xl"></i></a>
+                         </div>
+                    </div>
+                </div>
+
+                <div id="contact-map" class="w-full h-80 md:h-96 lg:h-full rounded-lg shadow-lg overflow-hidden border-2 border-silversand-dark">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.526311929919!2d124.83083931529916!3d1.4542147615374868!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x328774fd405d7f3b%3A0x4a8c9af3a6b1ab8e!2sFakultas%20Kesehatan%20Masyarakat%20Unsrat!5e0!3m2!1sen!2sid!4v1678886543210!5m2!1sen!2sid" width="100%"
+                        height="100%"
+                        style="border:0;"
+                        allowfullscreen=""
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Peta Lokasi FKM UNSRAT">
+                    </iframe>
+                </div>
+
+            </div>
+            </div>
+    </section>
+    <footer class="bg-army-dark text-silversand-light py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                         <a href="#home" class="flex items-center space-x-2 group">
+                            <div class="hexagon bg-white w-10 h-10 flex items-center justify-center text-army group-hover:scale-110 transition-transform duration-300">
+                               <i class="fas fa-university text-xl"></i>
+                            </div>
+                            <span class="text-xl font-display font-semibold text-white group-hover:text-silversand transition-colors">BPM FKM</span>
+                         </a>
+                    </div>
+                    <p class="text-sm text-gray-300/80 leading-relaxed">Badan Perwakilan Mahasiswa Fakultas Kesehatan Masyarakat Universitas Sam Ratulangi.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Tautan Cepat</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-300/90 hover:text-white transition-colors text-sm">Beranda</a></li>
+                        <li><a href="#about" class="text-gray-300/90 hover:text-white transition-colors text-sm">Tentang</a></li>
+                        <li><a href="#structure" class="text-gray-300/90 hover:text-white transition-colors text-sm">Struktur</a></li>
+                        <li><a href="#functions" class="text-gray-300/90 hover:text-white transition-colors text-sm">Fungsi</a></li>
+                        <li><a href="#gallery" class="text-gray-300/90 hover:text-white transition-colors text-sm">Galeri</a></li>
+                        <li><a href="#contact" class="text-gray-300/90 hover:text-white transition-colors text-sm">Kontak</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold text-white mb-4">Ikuti Kami</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" aria-label="Facebook" class="text-gray-300/90 hover:text-white transition-colors"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" aria-label="Twitter" class="text-gray-300/90 hover:text-white transition-colors"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" aria-label="Instagram" class="text-gray-300/90 hover:text-white transition-colors"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" aria-label="LinkedIn" class="text-gray-300/90 hover:text-white transition-colors"><i class="fab fa-linkedin-in text-xl"></i></a>
+                    </div>
+                    <p class="text-sm text-gray-300/80 mt-4">Dapatkan info terbaru dari kami.</p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-army pt-6 text-center text-sm text-gray-400">
+                <p>&copy; <span id="current-year"></span> BPM FKM UNSRAT. Hak Cipta Dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+    <div class="modal" id="galleryModal">
+        <span class="modal-close" id="closeModal">&times;</span>
+        <img class="modal-content rounded-lg" id="modalImage" alt="Gambar Galeri Diperbesar">
+    </div>
+    <script>
+        // Mobile Menu Toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinksMobile = mobileMenu.querySelectorAll('a');
+
+        menuToggle.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.toggle('hidden');
+            menuToggle.innerHTML = isHidden
+                ? `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>`
+                : `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+        });
+
+        navLinksMobile.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                 menuToggle.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>`;
+            });
+        });
+
+        // Navbar Scroll Effect
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > 50) {
+                navbar.classList.add('shadow-md', 'bg-white');
+                navbar.classList.remove('bg-white/95');
+            } else {
+                navbar.classList.remove('shadow-md', 'bg-white');
+                navbar.classList.add('bg-white/95');
+            }
+        }, false);
+
+        // Active Nav Link Highlighting
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section[id]');
+        function changeLinkState() {
+            let index = sections.length;
+            while(--index && window.scrollY + 100 < sections[index].offsetTop) {}
+            navLinks.forEach((link) => link.classList.remove('active'));
+            if (navLinks[index]) {
+                 navLinks[index].classList.add('active');
+                 const mobileLink = document.querySelector(`#mobile-menu a[href="${navLinks[index].getAttribute('href')}"]`);
+                 document.querySelectorAll('#mobile-menu a').forEach(ml => {
+                     ml.classList.remove('text-army', 'font-semibold');
+                     ml.classList.add('text-gray-700', 'font-medium');
+                 });
+                 if (mobileLink) {
+                     mobileLink.classList.add('text-army', 'font-semibold');
+                     mobileLink.classList.remove('text-gray-700', 'font-medium');
+                 }
+            }
+        }
+        changeLinkState();
+        window.addEventListener('scroll', changeLinkState);
+
+        // --- Commission Slider Logic (Kode JS Asli dari Upload User) ---
+        const commissionSliderWrapper = document.getElementById('commissionSliderWrapper');
+        const commissionSlider = document.getElementById('commissionSlider');
+        const commissionSlides = document.querySelectorAll('.commission-slide');
+        const prevCommissionBtn = document.getElementById('prevCommissionBtn');
+        const nextCommissionBtn = document.getElementById('nextCommissionBtn');
+        const dotsIndicator = document.getElementById('dotsIndicator');
+        let currentCommissionIndex = 0;
+        let isDesktop = window.innerWidth >= 641;
+        let slideWidth = 0;
+
+        let isDragging = false;
+        let startPosX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+
+        function calculateSlideWidth() {
+             if (commissionSliderWrapper) { slideWidth = commissionSliderWrapper.offsetWidth; }
+             else { slideWidth = window.innerWidth; console.warn("#commissionSliderWrapper not found."); }
+        }
+        function setSliderPosition() { if (!isDesktop && commissionSlider) { commissionSlider.style.transform = `translateX(${currentTranslate}px)`; } }
+        function updateDots() {
+            if (dotsIndicator) {
+                const dots = dotsIndicator.querySelectorAll('.dot');
+                dots.forEach((dot, index) => { dot.classList.toggle('active', index === currentCommissionIndex); });
+            }
+        }
+        function setupDots() {
+            if (dotsIndicator && commissionSlides.length > 0) {
+                dotsIndicator.innerHTML = '';
+                commissionSlides.forEach((_, index) => {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    dot.setAttribute('data-index', index);
+                    dot.addEventListener('click', () => { if (!isDesktop) { currentCommissionIndex = index; goToSlide(); } });
+                    dotsIndicator.appendChild(dot);
+                });
+                updateDots();
+            }
+        }
+        function goToSlide(index = currentCommissionIndex) {
+            if (!commissionSlider || commissionSlides.length === 0) return;
+            currentCommissionIndex = Math.max(0, Math.min(index, commissionSlides.length - 1));
+            if (isDesktop) {
+                commissionSlider.style.transition = 'transform 0.5s ease-in-out';
+                commissionSlider.style.transform = `translateX(-${currentCommissionIndex * 100}%)`;
+                commissionSlides.forEach((slide, idx) => { slide.classList.toggle('visible-slide', idx === currentCommissionIndex); });
+            } else {
+                commissionSlider.style.transition = 'transform 0.3s ease-out';
+                currentTranslate = -currentCommissionIndex * slideWidth;
+                prevTranslate = currentTranslate;
+                setSliderPosition();
+            }
+            updateDots();
+        }
+        function handleResize() {
+             if (!commissionSliderWrapper || !commissionSlider) return;
+            const wasDesktop = isDesktop;
+            isDesktop = window.innerWidth >= 641;
+            calculateSlideWidth();
+            if (wasDesktop !== isDesktop) {
+                 commissionSlider.style.transition = 'none';
+                 if (isDesktop) {
+                     commissionSliderWrapper.style.overflow = 'hidden'; currentTranslate = 0; prevTranslate = 0;
+                     commissionSlider.style.transform = `translateX(-${currentCommissionIndex * 100}%)`;
+                     commissionSlides.forEach((slide, idx) => { slide.style.transform = ''; slide.style.opacity = ''; slide.classList.toggle('visible-slide', idx === currentCommissionIndex); });
+                 } else {
+                     commissionSliderWrapper.style.overflow = 'hidden'; currentTranslate = -currentCommissionIndex * slideWidth; prevTranslate = currentTranslate;
+                     commissionSlides.forEach(slide => { slide.classList.remove('visible-slide'); slide.style.opacity = '1'; slide.style.transform = 'none'; });
+                     commissionSlider.style.transform = `translateX(${currentTranslate}px)`;
+                 }
+                 setTimeout(() => { commissionSlider.style.transition = isDesktop ? 'transform 0.5s ease-in-out' : 'transform 0.3s ease-out'; }, 50);
+            } else {
+                 if (isDesktop) { commissionSlider.style.transform = `translateX(-${currentCommissionIndex * 100}%)`; }
+                 else {
+                     currentTranslate = -currentCommissionIndex * slideWidth; prevTranslate = currentTranslate;
+                     const currentTransition = commissionSlider.style.transition; commissionSlider.style.transition = 'none';
+                     setSliderPosition(); if (commissionSlider) commissionSlider.offsetHeight; commissionSlider.style.transition = currentTransition;
+                 }
+            }
+             updateDots();
+        }
+        function touchStart(event) { if (isDesktop || !commissionSlider) return; commissionSlider.style.transition = 'none'; startPosX = event.touches[0].clientX; isDragging = true; animationID = requestAnimationFrame(animation); }
+        function touchMove(event) { if (isDesktop || !isDragging) return; const currentPosX = event.touches[0].clientX; currentTranslate = prevTranslate + currentPosX - startPosX; }
+        function touchEnd() {
+            if (isDesktop || !isDragging) return; cancelAnimationFrame(animationID); isDragging = false;
+            const movedBy = currentTranslate - prevTranslate; const threshold = slideWidth > 0 ? slideWidth / 5 : 50;
+            if (movedBy < -threshold && currentCommissionIndex < commissionSlides.length - 1) { currentCommissionIndex += 1; }
+            else if (movedBy > threshold && currentCommissionIndex > 0) { currentCommissionIndex -= 1; }
+            goToSlide(currentCommissionIndex);
+        }
+        function animation() { if (!isDragging) return; setSliderPosition(); requestAnimationFrame(animation); }
+        function initializeSlider() {
+            if (!commissionSliderWrapper || !commissionSlider || commissionSlides.length === 0) { return; }
+            calculateSlideWidth(); isDesktop = window.innerWidth >= 641; setupDots();
+            if (isDesktop) { commissionSlider.style.transition = 'transform 0.5s ease-in-out'; goToSlide(0); }
+            else {
+                 commissionSlider.style.transition = 'transform 0.3s ease-out'; currentTranslate = -currentCommissionIndex * slideWidth; prevTranslate = currentTranslate; setSliderPosition();
+                 commissionSlides.forEach(slide => { slide.classList.remove('visible-slide'); slide.style.opacity = '1'; slide.style.transform = 'none'; }); updateDots();
+            }
+            window.addEventListener('resize', handleResize);
+            if (prevCommissionBtn && nextCommissionBtn) {
+                prevCommissionBtn.addEventListener('click', () => { if (isDesktop) { goToSlide(currentCommissionIndex - 1); } });
+                nextCommissionBtn.addEventListener('click', () => { if (isDesktop) { goToSlide(currentCommissionIndex + 1); } });
+            }
+            commissionSliderWrapper.addEventListener('touchstart', touchStart, { passive: true });
+            commissionSliderWrapper.addEventListener('touchmove', touchMove, { passive: true });
+            commissionSliderWrapper.addEventListener('touchend', touchEnd); commissionSliderWrapper.addEventListener('touchcancel', touchEnd);
+            commissionSlider.querySelectorAll('img, a').forEach(el => { el.addEventListener('dragstart', (e) => e.preventDefault()); });
+        }
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initializeSlider); } else { initializeSlider(); }
+        // --- End Commission Slider Logic ---
+
+        // Gallery Modal
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const galleryModal = document.getElementById('galleryModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModalBtn = document.getElementById('closeModal');
+        if (galleryModal && modalImage && closeModalBtn) {
+            galleryItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const img = item.querySelector('img');
+                    if (img) { modalImage.src = img.src; galleryModal.style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+                });
+            });
+            function closeGalleryModal() { galleryModal.style.display = 'none'; document.body.style.overflow = ''; }
+            closeModalBtn.addEventListener('click', closeGalleryModal);
+            galleryModal.addEventListener('click', (e) => { if (e.target === galleryModal) { closeGalleryModal(); } });
+            document.addEventListener('keydown', (e) => { if (e.key === "Escape" && galleryModal.style.display === 'flex') { closeGalleryModal(); } });
+        }
+
+        // Contact Form Submission (Placeholder Logic Dihapus karena form hilang)
+        // const contactForm = document.getElementById('contactForm');
+        // if (contactForm) { ... }
+
+        // Image Error Handling
+        document.querySelectorAll('img').forEach(img => {
+            if (!img.getAttribute('onerror')) {
+                img.onerror = function() {
+                    const width = img.getAttribute('width') || img.offsetWidth || 150; const height = img.getAttribute('height') || img.offsetHeight || 150;
+                    const bgColor = 'BDC1BF'; const textColor = '4B5320';
+                    const placeholderUrl = `https://placehold.co/${width}x${height}/${bgColor}/${textColor}?text=Gagal+Muat`;
+                    this.onerror=null; this.src=placeholderUrl; console.warn(`Image failed to load: ${img.src}. Replaced.`);
+                };
+            }
+        });
+
+        // Update Copyright Year
+        const yearSpan = document.getElementById('current-year');
+        if (yearSpan) { yearSpan.textContent = new Date().getFullYear(); }
+
+    </script>
+    </body>
+</html>
